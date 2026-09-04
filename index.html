@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TaniTrack - Aplikasi pencatatan kegiatan usaha tani, analisis kelayakan R/C Ratio, dan BEP (Break Even Point) modern untuk mahasiswa pertanian & petani.">
+    <title>TaniTrack - Manajemen Usaha Tani & Analisis BEP Modern</title>
+    
+    <!-- Google Fonts & Style CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+    <!-- Header & Navigation Bar -->
+    <header class="header">
+        <div class="container navbar">
+            <div class="brand" onclick="switchTab('beranda')">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10S2 17.523 2 12A10 10 0 0 1 12 2z" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <path d="M12 6v12M8 10c2-2 6-2 8 0M7 15c3-2 7-2 10 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="brand-text">Tani<span>Track</span></div>
+            </div>
+
+            <ul class="nav-links" id="navLinks">
+                <li class="nav-item">
+                    <button class="nav-link-btn active" data-tab="beranda" data-i18n="nav.beranda">🏠 Beranda</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link-btn" data-tab="dashboard" data-i18n="nav.dashboard">📊 Dashboard</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link-btn" data-tab="lahan" data-i18n="nav.lahan">🌾 Data Lahan</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link-btn" data-tab="biaya" data-i18n="nav.biaya">💸 Biaya Usaha Tani</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link-btn" data-tab="panen" data-i18n="nav.panen">🌽 Hasil Panen</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link-btn" data-tab="laporan" data-i18n="nav.laporan">📑 Laporan & BEP</button>
+                </li>
+            </ul>
+
+            <div class="nav-right-controls">
+                <!-- Theme Toggle Button (Mode Siang / Malam) -->
+                <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Mode Malam / Siang">
+                    🌙
+                </button>
+
+                <!-- Language Selector Dropdown (ID, EN, TH, JP) -->
+                <select class="lang-select" id="langSelect" aria-label="Pilih Bahasa">
+                    <option value="id">🇮🇩 Indonesia</option>
+                    <option value="en">🇬🇧 English</option>
+                    <option value="th">🇹🇭 ไทย (Thai)</option>
+                    <option value="ja">🇯🇵 日本語 (JP)</option>
+                </select>
+
+                <button class="mobile-toggle" id="mobileToggle" aria-label="Menu Navigasi">
+                    ☰
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Views -->
+    <main class="container">
+
+        <!-- ==================== 1. BERANDA ==================== -->
+        <section id="page-beranda" class="page-view active">
+            <div class="hero-section">
+                <div class="hero-content">
+                    <span class="hero-badge" data-i18n="hero.badge">🌱 Solusi Digital Usaha Tani Modern</span>
+                    <h1 class="hero-title" data-i18n="hero.title">Kelola Usaha Tani & Hitung BEP Secara Otomatis</h1>
+                    <p class="hero-subtitle" data-i18n="hero.subtitle">
+                        TaniTrack membantu mahasiswa pertanian dan petani Indonesia mencatat biaya operasional, hasil penjualan panen, serta menghitung Keuntungan, R/C Ratio, dan Titik Impas (BEP) secara otomatis dan akurat.
+                    </p>
+                    <div class="hero-actions">
+                        <button class="btn btn-light btn-lg" id="btnStartRecording" data-i18n="hero.btnStart">
+                            🚀 Mulai Mencatat Sekarang
+                        </button>
+                        <button class="btn btn-outline-light btn-lg" onclick="switchTab('dashboard')" data-i18n="hero.btnDemo">
+                            📊 Lihat Dashboard & BEP
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <h2 class="section-title" data-i18n="features.title">Fitur Unggulan TaniTrack</h2>
+                <p class="section-subtitle" data-i18n="features.subtitle">Aplikasi sederhana, modern, dan rapi yang dapat diakses dari HP maupun Laptop.</p>
+            </div>
+
+            <div class="grid-3" style="margin-bottom: 3rem;">
+                <div class="card card-hover">
+                    <div class="feature-icon">💰</div>
+                    <h3 class="feature-title" data-i18n="features.f1Title">Pencatatan Biaya Usaha Tani</h3>
+                    <p class="feature-desc" data-i18n="features.f1Desc">Catat pengeluaran benih, pupuk, pestisida, hingga upah tenaga kerja (HOK) secara terstruktur.</p>
+                </div>
+
+                <div class="card card-hover">
+                    <div class="feature-icon">🌽</div>
+                    <h3 class="feature-title" data-i18n="features.f2Title">Pencatatan & Simpan Hasil Panen</h3>
+                    <p class="feature-desc" data-i18n="features.f2Desc">Simpan catatan hasil panen dengan mudah. Sistem menghitung otomatis Total Pendapatan = Hasil Panen × Harga Jual.</p>
+                </div>
+
+                <div class="card card-hover">
+                    <div class="feature-icon">🧮</div>
+                    <h3 class="feature-title" data-i18n="features.f3Title">Analisis R/C Ratio & BEP</h3>
+                    <p class="feature-desc" data-i18n="features.f3Desc">Ketahui titik impas produksi (BEP Produksi) dan titik impas harga (BEP Harga) untuk mengukur tingkat efisiensi usahatani Anda.</p>
+                </div>
+            </div>
+
+            <!-- Demo Banner Trigger -->
+            <div class="card" style="background: linear-gradient(135deg, var(--primary-light), var(--bg-alt)); border-color: var(--primary-border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1.5rem;">
+                <div>
+                    <h3 style="color:var(--primary-dark); font-size:1.3rem; font-weight:800; margin-bottom:0.3rem;" data-i18n="demoBanner.title">🎓 Presets Demo Siap Dipresentasikan</h3>
+                    <p style="color:var(--text-body);" data-i18n="demoBanner.desc">Website telah dilengkapi dengan Data Contoh usahatani Padi & Cabai realistis untuk kemudahan tugas kuliah.</p>
+                </div>
+                <div style="display:flex; gap:0.75rem;">
+                    <button class="btn btn-primary" onclick="resetToPresetData()" data-i18n="demoBanner.btnReset">🔄 Reset Data Contoh</button>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== 2. DASHBOARD ==================== -->
+        <section id="page-dashboard" class="page-view">
+            <div class="toolbar">
+                <div>
+                    <h2 class="section-title" data-i18n="dashboard.title">Dashboard Usaha Tani</h2>
+                    <p class="section-subtitle" data-i18n="dashboard.subtitle">Ringkasan kondisi keuangan, kelayakan usaha, dan analisis BEP.</p>
+                </div>
+                <div class="toolbar-right">
+                    <label for="dashboardLandFilter" style="font-weight:700; font-size:0.9rem;" data-i18n="dashboard.filterLabel">Filter Lahan:</label>
+                    <select id="dashboardLandFilter" class="form-control">
+                        <option value="all" data-i18n="dashboard.allLands">🌱 Semua Lahan Usaha Tani</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Info Metric Cards Grid -->
+            <div class="grid-cards" style="margin-bottom: 2rem;">
+                <!-- Total Biaya -->
+                <div class="card metric-card">
+                    <div class="metric-icon icon-amber">💸</div>
+                    <div class="metric-info">
+                        <div class="metric-label" data-i18n="dashboard.totalExpense">Total Biaya</div>
+                        <div class="metric-value" id="dashTotalExpense">Rp 0</div>
+                        <div class="metric-sub" style="color:var(--text-muted);" data-i18n="dashboard.expenseSub">Total pengeluaran</div>
+                    </div>
+                </div>
+
+                <!-- Total Pendapatan -->
+                <div class="card metric-card">
+                    <div class="metric-icon icon-green">💵</div>
+                    <div class="metric-info">
+                        <div class="metric-label" data-i18n="dashboard.totalRevenue">Total Pendapatan</div>
+                        <div class="metric-value" id="dashTotalRevenue">Rp 0</div>
+                        <div class="metric-sub" style="color:var(--text-muted);" data-i18n="dashboard.revenueSub">Hasil penjualan panen</div>
+                    </div>
+                </div>
+
+                <!-- Keuntungan -->
+                <div class="card metric-card">
+                    <div class="metric-icon icon-teal">📈</div>
+                    <div class="metric-info">
+                        <div class="metric-label" data-i18n="dashboard.netProfit">Total Keuntungan</div>
+                        <div class="metric-value" id="dashTotalProfit">Rp 0</div>
+                        <div class="metric-sub">
+                            <span id="dashProfitBadge" class="badge badge-success">Untung</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- R/C Ratio -->
+                <div class="card metric-card">
+                    <div class="metric-icon icon-purple">🧮</div>
+                    <div class="metric-info">
+                        <div class="metric-label" data-i18n="dashboard.rcRatio">R/C Ratio</div>
+                        <div class="metric-value" id="dashRcRatio">0.00</div>
+                        <div class="metric-sub">
+                            <span id="dashRcBadge" class="badge badge-success">✓ Layak</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BEP Produksi -->
+                <div class="card metric-card" style="border-left: 4px solid var(--info);">
+                    <div class="metric-icon icon-blue">📦</div>
+                    <div class="metric-info">
+                        <div class="metric-label" data-i18n="dashboard.bepProd">BEP Produksi</div>
+                        <div class="metric-value" id="dashBepProduksi">0 kg</div>
+                        <div class="metric-sub">
+                            <span id="dashBepBadge" class="badge badge-info" data-i18n="dashboard.bepProdSub">Titik Impas Panen</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BEP Harga -->
+                <div class="card metric-card" style="border-left: 4px solid #8b5cf6;">
+                    <div class="metric-icon icon-indigo">🏷️</div>
+                    <div class="metric-info">
+                        <div class="metric-label" data-i18n="dashboard.bepPrice">BEP Harga</div>
+                        <div class="metric-value" id="dashBepHarga">Rp 0/kg</div>
+                        <div class="metric-sub" style="color:var(--text-muted);" data-i18n="dashboard.bepPriceSub">Harga Impas Minimal</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Grid -->
+            <div class="grid-2" style="margin-bottom: 2rem;">
+                <div class="card chart-card">
+                    <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:1rem; color:var(--text-dark);" data-i18n="dashboard.chart1Title">
+                        📊 Perbandingan Biaya vs Pendapatan
+                    </h3>
+                    <div class="chart-wrapper">
+                        <canvas id="chartLandComparison"></canvas>
+                    </div>
+                </div>
+
+                <div class="card chart-card">
+                    <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:1rem; color:var(--text-dark);" data-i18n="dashboard.chart2Title">
+                        🍕 Distribusi Kategori Biaya Usaha Tani
+                    </h3>
+                    <div class="chart-wrapper">
+                        <canvas id="chartCategoryExpense"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Transactions Table -->
+            <div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+                    <h3 style="font-size:1.1rem; font-weight:700; color:var(--text-dark);" data-i18n="dashboard.recentTitle">🕒 Transaksi Terakhir</h3>
+                    <div style="display:flex; gap:0.5rem;">
+                        <button class="btn btn-secondary btn-sm" onclick="switchTab('biaya')" data-i18n="nav.biaya">Catat Biaya</button>
+                        <button class="btn btn-primary btn-sm" onclick="switchTab('panen')" data-i18n="panen.btnSave">💾 Simpan Hasil Panen</button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th data-i18n="common.actions">Tipe</th>
+                                <th data-i18n="common.date">Tanggal</th>
+                                <th data-i18n="common.land">Lahan</th>
+                                <th data-i18n="common.note">Keterangan / Detail</th>
+                                <th data-i18n="common.expense">Jumlah (Rp)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashRecentTableBody">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== 3. DATA LAHAN ==================== -->
+        <section id="page-lahan" class="page-view">
+            <div class="toolbar">
+                <div>
+                    <h2 class="section-title" data-i18n="lahan.title">🌾 Data Lahan Usaha Tani</h2>
+                    <p class="section-subtitle" data-i18n="lahan.subtitle">Kelola dan tambahkan petak lahan pertanian Anda.</p>
+                </div>
+                <div>
+                    <button class="btn btn-primary" onclick="openModal('modalLand')" data-i18n="lahan.btnAddModal">
+                        ➕ Modal Tambah Lahan
+                    </button>
+                </div>
+            </div>
+
+            <!-- Embedded Direct Form Input Card -->
+            <div class="card" style="margin-bottom: 2rem; border-top: 4px solid var(--primary);">
+                <h3 style="font-size:1.15rem; font-weight:800; margin-bottom:1.2rem; color:var(--text-dark);" data-i18n="lahan.formTitle">
+                    📝 Formulir Input / Tambah Data Lahan Baru
+                </h3>
+                <form id="pageFormLand">
+                    <div class="grid-3" style="gap:1rem; margin-bottom:1rem;">
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label"><span data-i18n="lahan.nameLabel">Nama Lahan</span> <span class="req">*</span></label>
+                            <input type="text" id="pageLandNameInput" class="form-control" style="width:100%;" placeholder="Contoh: Sawah Block A" required>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label"><span data-i18n="lahan.areaLabel">Luas Lahan (ha)</span> <span class="req">*</span></label>
+                            <input type="number" step="0.01" min="0.01" id="pageLandAreaInput" class="form-control" style="width:100%;" placeholder="Contoh: 1.5" required>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label"><span data-i18n="lahan.commodityLabel">Komoditas Utama</span> <span class="req">*</span></label>
+                            <input type="text" id="pageLandCommodityInput" class="form-control" style="width:100%;" placeholder="Contoh: Padi Ciherang" required>
+                        </div>
+                    </div>
+                    <div class="grid-2" style="gap:1rem; margin-bottom:1.2rem;">
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label" data-i18n="lahan.ageLabel">Umur Tanaman</label>
+                            <input type="text" id="pageLandAgeInput" class="form-control" style="width:100%;" placeholder="Contoh: 45 Hari">
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label" data-i18n="lahan.locationLabel">Lokasi Lahan</label>
+                            <input type="text" id="pageLandLocationInput" class="form-control" style="width:100%;" placeholder="Contoh: Desa Sukamaju, Subang">
+                        </div>
+                    </div>
+                    <div style="display:flex; justify-content:flex-end;">
+                        <button type="submit" class="btn btn-save-action" data-i18n="lahan.btnSave">💾 Simpan Data Lahan</button>
+                    </div>
+                </form>
+            </div>
+
+            <h3 style="font-size:1.2rem; font-weight:800; margin-bottom:1rem; color:var(--text-dark);" data-i18n="lahan.listTitle">
+                Daftar Lahan Terdaftar
+            </h3>
+            <div class="grid-3" id="landsGridContainer">
+                <!-- Cards render via JS -->
+            </div>
+        </section>
+
+
+        <!-- ==================== 4. BIAYA USAHA TANI ==================== -->
+        <section id="page-biaya" class="page-view">
+            <div class="toolbar">
+                <div>
+                    <h2 class="section-title" data-i18n="biaya.title">💸 Biaya Usaha Tani</h2>
+                    <p class="section-subtitle" data-i18n="biaya.subtitle">Catat dan simpan seluruh pengeluaran operasional usaha tani Anda.</p>
+                </div>
+                <div class="toolbar-right">
+                    <button class="btn btn-primary" onclick="openModal('modalExpense')" data-i18n="biaya.btnAddModal">
+                        ➕ Modal Catat Biaya
+                    </button>
+                </div>
+            </div>
+
+            <!-- Embedded Direct Form Input Card -->
+            <div class="card" style="margin-bottom: 2rem; border-top: 4px solid var(--accent);">
+                <h3 style="font-size:1.15rem; font-weight:800; margin-bottom:1.2rem; color:var(--text-dark);" data-i18n="biaya.formTitle">
+                    📝 Formulir Input / Tambah Biaya Usaha Tani Baru
+                </h3>
+                <form id="pageFormExpense">
+                    <div class="grid-3" style="gap:1rem; margin-bottom:1rem;">
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label"><span data-i18n="biaya.dateLabel">Tanggal Pengeluaran</span> <span class="req">*</span></label>
+                            <input type="date" id="pageExpenseDateInput" class="form-control" style="width:100%;" required>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label"><span data-i18n="biaya.landLabel">Pilih Lahan</span> <span class="req">*</span></label>
+                            <select id="pageExpenseLandSelect" class="form-control" style="width:100%;" required>
+                                <!-- Populated via JS -->
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label"><span data-i18n="biaya.categoryLabel">Kategori Biaya</span> <span class="req">*</span></label>
+                            <select id="pageExpenseCategorySelect" class="form-control" style="width:100%;" required>
+                                <option value="" disabled selected>-- Pilih Kategori Biaya --</option>
+                                <option value="Benih/Bibit">Benih/Bibit</option>
+                                <option value="Pupuk">Pupuk</option>
+                                <option value="Pestisida">Pestisida</option>
+                                <option value="Tenaga kerja">Tenaga kerja</option>
+                                <option value="Transportasi">Transportasi</option>
+                                <option value="Biaya lainnya">Biaya lainnya</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid-2" style="gap:1rem; margin-bottom:1.2rem;">
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label"><span data-i18n="biaya.noteLabel">Keterangan / Rincian Biaya</span> <span class="req">*</span></label>
+                            <input type="text" id="pageExpenseNoteInput" class="form-control" style="width:100%;" placeholder="Contoh: Pembelian Pupuk Urea 50 kg" required>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label"><span data-i18n="biaya.amountLabel">Jumlah Biaya (Rp)</span> <span class="req">*</span></label>
+                            <input type="number" min="0" step="1000" id="pageExpenseAmountInput" class="form-control" style="width:100%;" placeholder="Contoh: 450000" required>
+                        </div>
+                    </div>
+                    <div style="display:flex; justify-content:flex-end;">
+                        <button type="submit" class="btn btn-save-action" data-i18n="biaya.btnSave">💾 Simpan Biaya Usaha Tani</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Toolbar Filter Table -->
+            <div class="toolbar" style="background:none; border:none; padding:0; margin-bottom:1rem;">
+                <div class="toolbar-left">
+                    <input type="text" id="searchExpenseInput" class="form-control" placeholder="🔍 Cari keterangan/lahan..." style="width:240px;">
+                    <select id="filterExpenseCategory" class="form-control">
+                        <option value="all" data-i18n="biaya.allCategories">Semua Kategori Biaya</option>
+                        <option value="Benih/Bibit">Benih/Bibit</option>
+                        <option value="Pupuk">Pupuk</option>
+                        <option value="Pestisida">Pestisida</option>
+                        <option value="Tenaga kerja">Tenaga kerja</option>
+                        <option value="Transportasi">Transportasi</option>
+                        <option value="Biaya lainnya">Biaya lainnya</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th data-i18n="common.date">Tanggal</th>
+                            <th data-i18n="common.land">Lahan Usaha Tani</th>
+                            <th data-i18n="biaya.categoryLabel">Kategori Biaya</th>
+                            <th data-i18n="common.note">Keterangan</th>
+                            <th data-i18n="biaya.amountLabel">Jumlah Biaya</th>
+                            <th style="width:100px;" data-i18n="common.actions">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="expensesTableBody">
+                        <!-- Populated via JS -->
+                    </tbody>
+                    <tfoot>
+                        <tr style="background-color: var(--primary-light); font-weight:800;">
+                            <td colspan="4" style="text-align:right;" data-i18n="biaya.totalFooter">TOTAL BIAYA KESELURUHAN:</td>
+                            <td id="expensesTotalFooter" style="color:var(--danger); font-size:1.1rem;">Rp 0</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </section>
+
+
+        <!-- ==================== 5. HASIL PANEN ==================== -->
+        <section id="page-panen" class="page-view">
+            <div class="toolbar">
+                <div>
+                    <h2 class="section-title" data-i18n="panen.title">🌽 Hasil Panen</h2>
+                    <p class="section-subtitle" data-i18n="panen.subtitle">Catat dan simpan hasil panen serta harga jual komoditas.</p>
+                </div>
+                <div>
+                    <button class="btn btn-save-action" onclick="openModal('modalHarvest')" data-i18n="panen.btnAddModal">
+                        💾 Modal Simpan Hasil Panen
+                    </button>
+                </div>
+            </div>
+
+            <!-- Embedded Direct Form Input Card -->
+            <div class="card" style="margin-bottom: 2rem; border-top: 4px solid var(--primary-dark);">
+                <h3 style="font-size:1.15rem; font-weight:800; margin-bottom:1.2rem; color:var(--text-dark);" data-i18n="panen.formTitle">
+                    📝 Formulir Input / Simpan Hasil Panen Baru
+                </h3>
+                <form id="pageFormHarvest">
+                    <div class="grid-3" style="gap:1rem; margin-bottom:1rem;">
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label"><span data-i18n="panen.dateLabel">Tanggal Panen</span> <span class="req">*</span></label>
+                            <input type="date" id="pageHarvestDateInput" class="form-control" style="width:100%;" required>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label"><span data-i18n="panen.landLabel">Pilih Lahan</span> <span class="req">*</span></label>
+                            <select id="pageHarvestLandSelect" class="form-control" style="width:100%;" required>
+                                <!-- Populated via JS -->
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label"><span data-i18n="panen.commodityLabel">Komoditas Panen</span> <span class="req">*</span></label>
+                            <input type="text" id="pageHarvestCommodityInput" class="form-control" style="width:100%;" placeholder="Contoh: Padi GKP" required>
+                        </div>
+                    </div>
+                    <div class="grid-3" style="gap:1rem; margin-bottom:1.2rem;">
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label"><span data-i18n="panen.qtyLabel">Jumlah Panen</span> <span class="req">*</span></label>
+                            <input type="number" step="0.1" min="0.1" id="pageHarvestQuantityInput" class="form-control" style="width:100%;" placeholder="Contoh: 450" required>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label"><span data-i18n="panen.unitLabel">Satuan</span> <span class="req">*</span></label>
+                            <input type="text" id="pageHarvestUnitInput" class="form-control" style="width:100%;" placeholder="kg, ton, karung" value="kg" required>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label"><span data-i18n="panen.priceLabel">Harga Jual per Satuan (Rp)</span> <span class="req">*</span></label>
+                            <input type="number" min="0" step="100" id="pageHarvestPriceInput" class="form-control" style="width:100%;" placeholder="Contoh: 6500" required>
+                        </div>
+                    </div>
+
+                    <!-- Live Preview Box -->
+                    <div style="background:var(--primary-light); padding:1rem; border-radius:var(--radius-md); border:1px solid var(--primary-border); margin-bottom:1.2rem; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <div style="font-size:0.85rem; font-weight:700; color:var(--primary-dark);" data-i18n="panen.estRevenue">Estimasi Total Pendapatan Panen:</div>
+                            <div style="font-size:0.78rem; color:var(--text-muted);">Pendapatan = Jumlah Panen × Harga Jual</div>
+                        </div>
+                        <div id="pageHarvestTotalPreview" style="font-size:1.4rem; font-weight:800; color:var(--primary-dark);">Rp 0</div>
+                    </div>
+
+                    <div style="display:flex; justify-content:flex-end;">
+                        <button type="submit" class="btn btn-save-action" data-i18n="panen.btnSave">💾 Simpan Hasil Panen</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th data-i18n="common.date">Tanggal Panen</th>
+                            <th data-i18n="common.land">Lahan</th>
+                            <th data-i18n="common.commodity">Komoditas</th>
+                            <th data-i18n="panen.qtyLabel">Jumlah Hasil</th>
+                            <th data-i18n="panen.priceLabel">Harga Jual / Satuan</th>
+                            <th data-i18n="common.revenue">Total Pendapatan</th>
+                            <th style="width:100px;" data-i18n="common.actions">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="harvestsTableBody">
+                        <!-- Populated via JS -->
+                    </tbody>
+                    <tfoot>
+                        <tr style="background-color: var(--primary-light); font-weight:800;">
+                            <td colspan="5" style="text-align:right;" data-i18n="panen.totalFooter">TOTAL PENDAPATAN KESELURUHAN:</td>
+                            <td id="harvestsTotalFooter" style="color:#10b981; font-size:1.1rem;">Rp 0</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </section>
+
+
+        <!-- ==================== 6. LAPORAN & BEP ==================== -->
+        <section id="page-laporan" class="page-view">
+            <div class="toolbar no-print">
+                <div>
+                    <h2 class="section-title" data-i18n="laporan.title">📑 Laporan Keuangan & BEP Usaha Tani</h2>
+                    <p class="section-subtitle" data-i18n="laporan.subtitle">Evaluasi rasio R/C dan analisis titik impas Break Even Point.</p>
+                </div>
+                <div class="toolbar-right">
+                    <select id="reportLandFilter" class="form-control">
+                        <option value="all" data-i18n="dashboard.allLands">🌱 Semua Lahan Usaha Tani</option>
+                    </select>
+                    <button class="btn btn-secondary" onclick="window.print()" data-i18n="laporan.btnPrint">
+                        🖨️ Cetak Laporan / PDF
+                    </button>
+                </div>
+            </div>
+
+            <!-- Printable Report Document Card -->
+            <div class="report-card">
+                <div class="report-header">
+                    <h2 data-i18n="laporan.headerTitle">LAPORAN KEUANGAN & ANALISIS BEP USAHA TANI</h2>
+                    <p data-i18n="laporan.headerSub">TaniTrack - Sistem Pencatatan & Evaluasi Usahatani</p>
+                    <p style="font-size:0.85rem; color:var(--text-light); margin-top:0.4rem;"><span data-i18n="laporan.printedOn">Dicetak pada:</span> <span id="reportPrintDate"></span></p>
+                </div>
+
+                <!-- Feasibility Evaluation Banner -->
+                <div id="reportEvalBox" class="eval-box menguntungkan">
+                    <div class="eval-icon">📊</div>
+                    <div>
+                        <h3 id="reportEvalTitle" class="eval-title">Usahatani Menguntungkan & Layak</h3>
+                        <p id="reportEvalText" class="eval-text">Evaluasi otomatis berdasarkan data penerimaan dan pengeluaran.</p>
+                    </div>
+                </div>
+
+                <!-- Financial Summary Cards Grid -->
+                <div class="grid-cards" style="margin-bottom: 2rem;">
+                    <div class="card" style="background:var(--bg-alt); text-align:center;">
+                        <div style="font-size:0.82rem; color:var(--text-muted); font-weight:700;" data-i18n="dashboard.totalExpense">TOTAL BIAYA</div>
+                        <div id="reportTotalExpense" style="font-size:1.4rem; font-weight:800; color:var(--danger); margin-top:0.2rem;">Rp 0</div>
+                    </div>
+                    <div class="card" style="background:var(--bg-alt); text-align:center;">
+                        <div style="font-size:0.82rem; color:var(--text-muted); font-weight:700;" data-i18n="dashboard.totalRevenue">TOTAL PENDAPATAN</div>
+                        <div id="reportTotalRevenue" style="font-size:1.4rem; font-weight:800; color:#10b981; margin-top:0.2rem;">Rp 0</div>
+                    </div>
+                    <div class="card" style="background:var(--bg-alt); text-align:center;">
+                        <div style="font-size:0.82rem; color:var(--text-muted); font-weight:700;" data-i18n="dashboard.netProfit">KEUNTUNGAN BERSIH</div>
+                        <div id="reportProfit" style="font-size:1.4rem; font-weight:800; color:var(--primary-dark); margin-top:0.2rem;">Rp 0</div>
+                    </div>
+                    <div class="card" style="background:var(--bg-alt); text-align:center;">
+                        <div style="font-size:0.82rem; color:var(--text-muted); font-weight:700;" data-i18n="dashboard.rcRatio">R/C RATIO</div>
+                        <div id="reportRcRatio" style="font-size:1.4rem; font-weight:800; color:var(--secondary); margin-top:0.2rem;">0.00</div>
+                    </div>
+                </div>
+
+                <!-- BEP Highlight Section -->
+                <div class="bep-box">
+                    <h3 style="font-size:1.1rem; font-weight:800; color:var(--info); margin-bottom:0.75rem;" data-i18n="laporan.bepBoxTitle">
+                        🧮 Analisis Break Even Point (BEP / Titik Impas)
+                    </h3>
+                    <div class="bep-grid">
+                        <div class="bep-item">
+                            <div class="bep-item-title" data-i18n="laporan.bepProdTitle">BEP Produksi (Volume Impas)</div>
+                            <div class="bep-item-value" id="reportBepProduksi">0 kg</div>
+                            <div style="font-size:0.8rem; color:var(--text-muted); margin-top:0.3rem;">
+                                Rumus: Total Biaya ÷ Rata-rata Harga Jual
+                            </div>
+                        </div>
+                        <div class="bep-item">
+                            <div class="bep-item-title" data-i18n="laporan.bepPriceTitle">BEP Harga (Harga Impas Minimal)</div>
+                            <div class="bep-item-value" id="reportBepHarga">Rp 0/kg</div>
+                            <div style="font-size:0.8rem; color:var(--text-muted); margin-top:0.3rem;">
+                                Rumus: Total Biaya ÷ Total Jumlah Hasil Panen
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="font-size:1.1rem; font-weight:800; margin-bottom:1rem; color:var(--text-dark);" data-i18n="laporan.categoryBreakdownTitle">
+                    Rincian Alokasi Biaya Usaha Tani (Berdasarkan Kategori)
+                </h3>
+                <div class="table-responsive" style="margin-bottom:2rem;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th data-i18n="laporan.catHeader">Kategori Biaya</th>
+                                <th data-i18n="laporan.amountHeader">Jumlah Total Pengeluaran (Rp)</th>
+                                <th data-i18n="laporan.percentHeader">Persentase Alokasi (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportCategoryBreakdownBody">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Formulas Reference Info -->
+                <div style="background:var(--bg-alt); padding:1.25rem; border-radius:var(--radius-md); border:1px solid var(--border-color); font-size:0.88rem; color:var(--text-muted);">
+                    <h4 style="color:var(--text-dark); margin-bottom:0.4rem; font-weight:700;" data-i18n="laporan.formulasTitle">📌 Rumus Lengkap Analisis Usaha Tani & BEP:</h4>
+                    <ul style="padding-left:1.2rem; line-height:1.7;">
+                        <li><strong>Keuntungan</strong> = Total Pendapatan – Total Biaya</li>
+                        <li><strong>R/C Ratio</strong> = Total Pendapatan ÷ Total Biaya</li>
+                        <li><strong>BEP Produksi (kg)</strong> = Total Biaya ÷ Harga Jual per Satuan</li>
+                        <li><strong>BEP Harga (Rp/kg)</strong> = Total Biaya ÷ Total Jumlah Hasil Panen</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+
+    <!-- ==================== MODALS ==================== -->
+
+    <!-- Modal 1: Data Lahan -->
+    <div class="modal-overlay" id="modalLand">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalLandTitle" data-i18n="lahan.formTitle">Tambah Data Lahan Baru</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="formLand">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label"><span data-i18n="lahan.nameLabel">Nama Lahan</span> <span class="req">*</span></label>
+                        <input type="text" id="landNameInput" class="form-control" style="width:100%;" placeholder="Contoh: Sawah Block A" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><span data-i18n="lahan.areaLabel">Luas Lahan (ha)</span> <span class="req">*</span></label>
+                        <input type="number" step="0.01" min="0.01" id="landAreaInput" class="form-control" style="width:100%;" placeholder="Contoh: 1.5" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><span data-i18n="lahan.commodityLabel">Komoditas Utama</span> <span class="req">*</span></label>
+                        <input type="text" id="landCommodityInput" class="form-control" style="width:100%;" placeholder="Contoh: Padi Ciherang" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="lahan.ageLabel">Umur Tanaman</label>
+                        <input type="text" id="landAgeInput" class="form-control" style="width:100%;" placeholder="Contoh: 45 Hari">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="lahan.locationLabel">Lokasi Lahan</label>
+                        <input type="text" id="landLocationInput" class="form-control" style="width:100%;" placeholder="Contoh: Desa Sukamaju">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-cancel-modal" data-i18n="common.cancel">Batal</button>
+                    <button type="submit" class="btn btn-primary" data-i18n="lahan.btnSave">Simpan Lahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Modal 2: Biaya Usaha Tani -->
+    <div class="modal-overlay" id="modalExpense">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalExpenseTitle" data-i18n="biaya.formTitle">Catat Biaya Usaha Tani</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="formExpense">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label"><span data-i18n="biaya.dateLabel">Tanggal Pengeluaran</span> <span class="req">*</span></label>
+                        <input type="date" id="expenseDateInput" class="form-control" style="width:100%;" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><span data-i18n="biaya.landLabel">Pilih Lahan</span> <span class="req">*</span></label>
+                        <select id="expenseLandSelect" class="form-control" style="width:100%;" required>
+                            <!-- Options populated via JS -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><span data-i18n="biaya.categoryLabel">Kategori Biaya</span> <span class="req">*</span></label>
+                        <select id="expenseCategorySelect" class="form-control" style="width:100%;" required>
+                            <option value="" disabled selected>-- Pilih Kategori Biaya --</option>
+                            <option value="Benih/Bibit">Benih/Bibit</option>
+                            <option value="Pupuk">Pupuk</option>
+                            <option value="Pestisida">Pestisida</option>
+                            <option value="Tenaga kerja">Tenaga kerja</option>
+                            <option value="Transportasi">Transportasi</option>
+                            <option value="Biaya lainnya">Biaya lainnya</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><span data-i18n="biaya.noteLabel">Keterangan / Item</span> <span class="req">*</span></label>
+                        <input type="text" id="expenseNoteInput" class="form-control" style="width:100%;" placeholder="Contoh: Pembelian Pupuk Urea" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><span data-i18n="biaya.amountLabel">Jumlah Biaya (Rp)</span> <span class="req">*</span></label>
+                        <input type="number" min="0" step="1000" id="expenseAmountInput" class="form-control" style="width:100%;" placeholder="Contoh: 450000" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-cancel-modal" data-i18n="common.cancel">Batal</button>
+                    <button type="submit" class="btn btn-primary" data-i18n="biaya.btnSave">Simpan Biaya</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Modal 3: Form Hasil Panen -->
+    <div class="modal-overlay" id="modalHarvest">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalHarvestTitle" data-i18n="panen.formTitle">Catat & Simpan Hasil Panen</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="formHarvest">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label"><span data-i18n="panen.dateLabel">Tanggal Panen</span> <span class="req">*</span></label>
+                        <input type="date" id="harvestDateInput" class="form-control" style="width:100%;" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><span data-i18n="panen.landLabel">Pilih Lahan</span> <span class="req">*</span></label>
+                        <select id="harvestLandSelect" class="form-control" style="width:100%;" required>
+                            <!-- Options populated via JS -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><span data-i18n="panen.commodityLabel">Komoditas Panen</span> <span class="req">*</span></label>
+                        <input type="text" id="harvestCommodityInput" class="form-control" style="width:100%;" placeholder="Contoh: Padi GKP" required>
+                    </div>
+                    <div class="grid-2" style="gap:1rem; margin-bottom:1rem;">
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label"><span data-i18n="panen.qtyLabel">Jumlah Panen</span> <span class="req">*</span></label>
+                            <input type="number" step="0.1" min="0.1" id="harvestQuantityInput" class="form-control" style="width:100%;" placeholder="Contoh: 450" required>
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label class="form-label"><span data-i18n="panen.unitLabel">Satuan</span> <span class="req">*</span></label>
+                            <input type="text" id="harvestUnitInput" class="form-control" style="width:100%;" placeholder="kg, ton, karung" value="kg" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><span data-i18n="panen.priceLabel">Harga Jual per Satuan (Rp)</span> <span class="req">*</span></label>
+                        <input type="number" min="0" step="100" id="harvestPriceInput" class="form-control" style="width:100%;" placeholder="Contoh: 6500" required>
+                    </div>
+
+                    <!-- Auto Calculation & Live BEP Preview -->
+                    <div style="background:var(--primary-light); padding:1.1rem; border-radius:var(--radius-md); border:1px solid var(--primary-border); margin-top:1rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-size:0.85rem; font-weight:700; color:var(--primary-dark);" data-i18n="panen.estRevenue">Estimasi Pendapatan:</span>
+                            <span id="harvestTotalPreview" style="font-size:1.3rem; font-weight:800; color:var(--primary-dark);">Rp 0</span>
+                        </div>
+                        <div id="harvestBepPreview" style="font-size:0.8rem; color:var(--text-body); margin-top:0.5rem; padding-top:0.5rem; border-top:1px dashed var(--primary-border);">
+                            Pilih lahan untuk melihat indikator Titik Impas BEP.
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-cancel-modal" data-i18n="common.cancel">Batal</button>
+                    <button type="submit" class="btn btn-save-action" data-i18n="panen.btnSave">💾 Simpan Hasil Panen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>🌾 <strong>TaniTrack</strong> &copy; 2026 - Aplikasi Pencatatan Usaha Tani & Analisis BEP Modern untuk Petani & Mahasiswa Indonesia.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Scripts -->
+    <script src="js/dummy-data.js"></script>
+    <script src="js/translations.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        document.getElementById('reportPrintDate').textContent = new Date().toLocaleDateString('id-ID', {
+            day: 'numeric', month: 'long', year: 'numeric'
+        });
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('expenseDateInput').value = today;
+        document.getElementById('harvestDateInput').value = today;
+        if(document.getElementById('pageExpenseDateInput')) document.getElementById('pageExpenseDateInput').value = today;
+        if(document.getElementById('pageHarvestDateInput')) document.getElementById('pageHarvestDateInput').value = today;
+    </script>
+</body>
+</html>
